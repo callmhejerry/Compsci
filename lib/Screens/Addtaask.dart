@@ -90,9 +90,11 @@ class _AddtaskState extends State<Addtask> {
                   Provider.of<AddSchedule>(context, listen: false)
                       .addSchedule(_titleController.text, _taskController.text);
 
-                  print(Provider.of<AddSchedule>(context, listen: false)
-                      .tasks
-                      .length);
+                  print(
+                    Provider.of<AddSchedule>(context, listen: false)
+                        .tasks
+                        .length,
+                  );
                   Navigator.pop(context);
                 },
                 child: Text('Add'),
@@ -108,10 +110,11 @@ class _AddtaskState extends State<Addtask> {
           ),
         ),
         leading: IconButton(
-            icon: Icon(Feather.arrow_left),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
+          icon: Icon(Feather.arrow_left),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
     );
   }
