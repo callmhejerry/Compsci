@@ -3,6 +3,7 @@ import 'package:compsci/Screens/api.dart';
 // import 'package:compsci/Screens/api.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'Addtaask.dart';
 
@@ -63,9 +64,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 physics: BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
-                child: Column(
-                  children: tasks.toList(),
-                ),
+                child: Column(children: tasks),
               ),
             );
           }
@@ -77,14 +76,14 @@ class _SchedulePageState extends State<SchedulePage> {
 
 class Task extends StatefulWidget {
   const Task({
-    this.key,
+    @required this.uuid,
     @required this.taskwork,
     @required this.title,
-  }) : super(key: key);
+  });
 
   final String taskwork;
   final String title;
-  final Key key;
+  final String uuid;
 
   @override
   _TaskState createState() => _TaskState();
@@ -130,8 +129,13 @@ class _TaskState extends State<Task> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        // AddSchedule task = Provider.of<AddSchedule>(context,
-                        //     listen: false);
+                        AddSchedule task =
+                            Provider.of<AddSchedule>(context, listen: false);
+
+                        task.removeSchedule(widget.uuid);
+                        print(widget.uuid);
+                        print(task.tasks.length);
+                        Navigator.pop(context);
                       },
                       child: Text(
                         'Remove',
