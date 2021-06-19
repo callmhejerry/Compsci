@@ -25,6 +25,10 @@ class _AddtaskState extends State<Addtask> {
               TextFormField(
                 controller: _titleController,
                 maxLength: 20,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
                 decoration: InputDecoration(
                   labelText: "Title",
                   labelStyle: TextStyle(
@@ -56,6 +60,10 @@ class _AddtaskState extends State<Addtask> {
                 maxLength: 120,
                 maxLines: 5,
                 minLines: 2,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
                 controller: _taskController,
                 decoration: InputDecoration(
                   labelText: "Description",

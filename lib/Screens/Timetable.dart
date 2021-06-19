@@ -96,13 +96,13 @@ class _TabviewState extends State<Tabview> {
                 venue: 'stat hall',
               ),
               Classes(
-                course: 'Bio101',
+                course: 'mat102',
                 duration: '2hrs',
                 time: '8:00am',
                 venue: 'stat hall',
               ),
               Classes(
-                course: 'Bio101',
+                course: 'Chem223',
                 duration: '2hrs',
                 time: '8:00am',
                 venue: 'stat hall',
