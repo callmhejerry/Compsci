@@ -2,6 +2,7 @@ import 'package:compsci/ColorPalette.dart';
 import 'package:compsci/Screens/api.dart';
 // import 'package:compsci/Screens/api.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'Addtaask.dart';
@@ -215,7 +216,7 @@ class _TaskState extends State<Task> {
               child: Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  DateTime.now().toString(),
+                  DateFormat.yMMMd().format(DateTime.now()),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 11,

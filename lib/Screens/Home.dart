@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../ColorPalette.dart';
 
@@ -9,13 +10,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorPalette().bGColor,
       appBar: AppBar(
         actions: [
-          IconButton(icon: Icon(Feather.menu), onPressed: () {}),
+          IconButton(icon: Icon(Feather.log_out), onPressed: () {}),
         ],
         backgroundColor: ColorPalette().bGColor,
         elevation: 0,
@@ -35,12 +39,28 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: TableCalendar(
-                firstDay: DateTime(2021, 1, 7),
+                startingDayOfWeek: StartingDayOfWeek.sunday,
+                firstDay: DateTime(1990, 10, 16),
+                lastDay: DateTime(2050, 3, 14),
+                focusedDay: _focusedDay,
                 availableGestures: AvailableGestures.horizontalSwipe,
-                availableCalendarFormats: {
-                  CalendarFormat.month: 'month',
+                // availableCalendarFormats: {
+                //   CalendarFormat.month: 'month',
+                // },
+                calendarFormat: _calendarFormat,
+                onFormatChanged: (CalendarFormat format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
                 },
-                calendarFormat: CalendarFormat.month,
+                // enabledDayPredicate: (day) {
+                //   return isSameDay(_selectedDay, _focusedDay);
+                // },
+                onPageChanged: (focusedDay) {
+                  setState(() {
+                    _focusedDay = focusedDay;
+                  });
+                },
                 headerStyle: HeaderStyle(
                   titleTextStyle: TextStyle(
                     color: Colors.white,
@@ -59,14 +79,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     size: 20,
                   ),
                 ),
-                focusedDay: DateTime.now(),
-                lastDay: DateTime(2080, 9, 7),
+
+                onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                  setState(() {
+                    _focusedDay = focusedDay;
+                    _selectedDay = selectedDay;
+                  });
+                  print(_focusedDay);
+                },
+                selectedDayPredicate: (DateTime day) {
+                  return isSameDay(_selectedDay, day);
+                },
+
                 calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.orange,
+                      width: 1,
+                    ),
+                  ),
                   defaultTextStyle: TextStyle(
                     color: Colors.white,
                   ),
                   outsideDaysVisible: false,
-                  isTodayHighlighted: true,
                   todayDecoration: BoxDecoration(
                     color: ColorPalette().accentColor3,
                     shape: BoxShape.circle,

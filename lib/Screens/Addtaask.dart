@@ -24,7 +24,7 @@ class _AddtaskState extends State<Addtask> {
             children: [
               TextFormField(
                 controller: _titleController,
-                maxLength: 20,
+                maxLength: 30,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
