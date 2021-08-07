@@ -97,12 +97,6 @@ class _AddtaskState extends State<Addtask> {
                 onPressed: () {
                   Provider.of<AddSchedule>(context, listen: false)
                       .addSchedule(_titleController.text, _taskController.text);
-
-                  print(
-                    Provider.of<AddSchedule>(context, listen: false)
-                        .tasks
-                        .length,
-                  );
                   Navigator.pop(context);
                 },
                 child: Text('Add'),

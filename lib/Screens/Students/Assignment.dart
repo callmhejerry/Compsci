@@ -1,95 +1,77 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:compsci/ColorPalette.dart';
-import 'package:compsci/Screens/api.dart';
-// import 'package:compsci/Screens/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-import 'Addtaask.dart';
-
-class SchedulePage extends StatefulWidget {
+class AssignmentPage extends StatefulWidget {
   @override
-  _SchedulePageState createState() => _SchedulePageState();
+  _AssignmentPageState createState() => _AssignmentPageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> {
-  // List<Task> tasks = [];
+class _AssignmentPageState extends State<AssignmentPage> {
+  CollectionReference collectionReference =
+      FirebaseFirestore.instance.collection('Assignments');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPalette().bGColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+        child: StreamBuilder(
+          stream: collectionReference.snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Something went wrong"),
+              );
+            }
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                reverse: true,
+                child: Column(
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
+                    return Assignment(
+                      course: data["course"],
+                      details: data["details"],
+                      submissionDate: data["submission date"],
+                    );
+                  }).toList(),
+                ),
+              );
+            }
+            return Container();
+          },
+        ),
+      ),
       appBar: AppBar(
-        elevation: 3,
         backgroundColor: ColorPalette().bGColor,
         title: Text(
-          'Schedule',
+          'Assignments',
           style: TextStyle(
             color: Colors.white,
             fontSize: 25,
           ),
         ),
       ),
-      backgroundColor: ColorPalette().bGColor,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ColorPalette().accentColor4,
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => Addtask()));
-        },
-        child: Text(
-          "+",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Consumer<AddSchedule>(
-        child: Text('good'),
-        builder: (context, task, child) {
-          List<Task> tasks = task.tasks;
-          if (tasks.isEmpty) {
-            return Center(
-              child: Text(
-                'No schedule yet',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 10,
-              ),
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-                child: Column(children: tasks),
-              ),
-            );
-          }
-        },
-      ),
     );
   }
 }
 
-class Task extends StatefulWidget {
-  const Task({
-    @required this.uuid,
-    @required this.taskwork,
-    @required this.title,
-  });
-
-  final String taskwork;
-  final String title;
-  final String uuid;
-
+class Assignment extends StatefulWidget {
+  Assignment({this.course, this.details, this.submissionDate});
+  final String details;
+  final String course;
+  final String submissionDate;
   @override
-  _TaskState createState() => _TaskState();
+  _AssignmentState createState() => _AssignmentState();
 }
 
-class _TaskState extends State<Task> {
+class _AssignmentState extends State<Assignment> {
   bool done = false;
   bool overflow = false;
   @override
@@ -110,11 +92,11 @@ class _TaskState extends State<Task> {
               elevation: 5,
               backgroundColor: ColorPalette().bGColor,
               title: Text(
-                'Edit task',
+                'Edit Assignment',
                 style: TextStyle(color: Colors.white),
               ),
               content: Text(
-                'You can choose to remove the task or mark as done',
+                'Have you done your assignment ?',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -129,29 +111,9 @@ class _TaskState extends State<Task> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        AddSchedule task =
-                            Provider.of<AddSchedule>(context, listen: false);
-
-                        task.removeSchedule(widget.uuid);
-                        print(widget.uuid);
-                        print(task.tasks.length);
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Remove',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(
-                          () {
-                            done = !done;
-                          },
-                        );
+                        setState(() {
+                          done = !done;
+                        });
                         Navigator.pop(context);
                       },
                       child: Text(
@@ -171,7 +133,7 @@ class _TaskState extends State<Task> {
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
-        padding: EdgeInsets.all(9),
+        padding: EdgeInsets.symmetric(horizontal: 9, vertical: 9),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -180,7 +142,7 @@ class _TaskState extends State<Task> {
               child: Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.title,
+                  widget.course,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -195,10 +157,10 @@ class _TaskState extends State<Task> {
             Flexible(
               fit: FlexFit.loose,
               child: Container(
+                alignment: Alignment.centerLeft,
                 padding: EdgeInsets.symmetric(horizontal: 7),
-                alignment: Alignment.topLeft,
                 child: Text(
-                  widget.taskwork,
+                  widget.details,
                   overflow:
                       overflow ? TextOverflow.visible : TextOverflow.ellipsis,
                   style: TextStyle(
@@ -209,27 +171,39 @@ class _TaskState extends State<Task> {
               ),
             ),
             SizedBox(
-              height: 5,
+              height: 6,
             ),
             Flexible(
               fit: FlexFit.loose,
               child: Container(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  DateFormat.yMMMd().format(DateTime.now()),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Submission:  ' + widget.submissionDate,
+                    style: TextStyle(
+                      color: Colors.yellow,
+                      fontSize: 13,
+                    ),
                   ),
-                ),
-              ),
+                  Flexible(
+                    child: Text(
+                      DateFormat.yMd().format(DateTime.now()),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
             ),
           ],
         ),
         height: overflow ? null : 100,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: done ? Colors.transparent : Colors.black26,
+          color: done ? Colors.transparent : Colors.blueGrey,
           borderRadius: BorderRadius.circular(15),
         ),
       ),
