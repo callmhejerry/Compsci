@@ -24,7 +24,8 @@ class _ThursdayState extends State<Thursday> {
       "Course": course,
       "Duration": duration,
       "Time": time,
-      "Venue": venue
+      "Venue": venue,
+      "timeStamp": DateTime.now()
     };
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("Thursday");

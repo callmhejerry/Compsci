@@ -15,8 +15,10 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay;
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  Stream<QuerySnapshot> announcement =
-      FirebaseFirestore.instance.collection("Annocements").snapshots();
+  Stream<QuerySnapshot> announcement = FirebaseFirestore.instance
+      .collection("Annocements")
+      .orderBy("timeStamp", descending: true)
+      .snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

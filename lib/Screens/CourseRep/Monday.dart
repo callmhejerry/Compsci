@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'Courserep.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -25,7 +24,8 @@ class _MondayState extends State<Monday> {
       "Course": course,
       "Duration": duration,
       "Time": time,
-      "Venue": venue
+      "Venue": venue,
+      "timeStamp": DateTime.now()
     };
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("Monday");
@@ -78,7 +78,7 @@ class _MondayState extends State<Monday> {
           }
           return Container();
         },
-        stream: monday.snapshots(),
+        stream: monday.orderBy("timeStamp").snapshots(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

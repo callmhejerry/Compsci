@@ -338,6 +338,21 @@ class _CourseRepLoginState extends State<CourseRepLogin> {
                       try {
                         UserCredential user = await auth.courseRepSignIn(
                             _username.text, _password.text);
+                        String fcmToken =
+                            await FirebaseMessaging.instance.getToken();
+                        print(fcmToken);
+                        DocumentReference tokenRef = FirebaseFirestore.instance
+                            .collection('Users')
+                            .doc('user tokens')
+                            .collection('tokens')
+                            .doc(fcmToken);
+
+                        await tokenRef.set({
+                          'token': fcmToken,
+                          'regnumber': _username.text,
+                          'name': _password.text,
+                          'device': Platform.operatingSystem,
+                        });
                         if (user.user.uid == "ZrsrNH9F7FXuGDqUSTNbi6zd6te2") {
                           Navigator.pushReplacement(
                               context,

@@ -178,7 +178,9 @@ class _CourseRepAssignmentState extends State<CourseRepAssignment> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
         child: StreamBuilder(
-          stream: collectionReference.snapshots(),
+          stream: collectionReference
+              .orderBy("timeStamp", descending: true)
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
@@ -217,8 +219,10 @@ class CourseRepAnnouncement extends StatefulWidget {
 }
 
 class _CourseRepAnnouncementState extends State<CourseRepAnnouncement> {
-  Stream<QuerySnapshot> announcement =
-      FirebaseFirestore.instance.collection("Annocements").snapshots();
+  Stream<QuerySnapshot> announcement = FirebaseFirestore.instance
+      .collection("Annocements")
+      .orderBy("timeStamp", descending: true)
+      .snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,6 +289,7 @@ class AddAnnouncement extends StatelessWidget {
     Map<String, dynamic> data = {
       "Description": description,
       "Title": title,
+      "timeStamp": DateTime.now()
     };
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("Annocements");
@@ -435,7 +440,8 @@ class AddAssignment extends StatelessWidget {
     Map<String, dynamic> data = {
       "course": course,
       "details": details,
-      "submission date": submissionDate
+      "submission date": submissionDate,
+      "timeStamp": DateTime.now()
     };
 
     CollectionReference collectionReference =

@@ -73,30 +73,6 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 }
 
-class Tabview extends StatefulWidget {
-  @override
-  _TabviewState createState() => _TabviewState();
-}
-
-class _TabviewState extends State<Tabview> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: ColorPalette().bGColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 17.0, horizontal: 20),
-        child: SingleChildScrollView(
-          physics:
-              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          child: Column(
-            children: [],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class Monday extends StatefulWidget {
   @override
   _MondayState createState() => _MondayState();
@@ -146,7 +122,7 @@ class _MondayState extends State<Monday> {
           }
           return Container();
         },
-        stream: monday.snapshots(),
+        stream: monday.orderBy("timeStamp").snapshots(),
       ),
     );
   }
@@ -202,7 +178,7 @@ class _TuesdayState extends State<Tuesday> {
           }
           return Container();
         },
-        stream: tuesday.snapshots(),
+        stream: tuesday.orderBy("timeStamp").snapshots(),
       ),
     );
   }
@@ -258,7 +234,7 @@ class _WednesdayState extends State<Wednesday> {
           }
           return Container();
         },
-        stream: wednesday.snapshots(),
+        stream: wednesday.orderBy("timeStamp").snapshots(),
       ),
     );
   }
@@ -314,7 +290,7 @@ class _ThursdayState extends State<Thursday> {
           }
           return Container();
         },
-        stream: thursday.snapshots(),
+        stream: thursday.orderBy("timeStamp").snapshots(),
       ),
     );
   }
@@ -369,7 +345,7 @@ class _FridayState extends State<Friday> {
           }
           return Container();
         },
-        stream: friday.snapshots(),
+        stream: friday.orderBy("timeStamp").snapshots(),
       ),
     );
   }

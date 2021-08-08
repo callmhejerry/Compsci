@@ -18,7 +18,9 @@ class _AssignmentPageState extends State<AssignmentPage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
         child: StreamBuilder(
-          stream: collectionReference.snapshots(),
+          stream: collectionReference
+              .orderBy("timeStamp", descending: true)
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

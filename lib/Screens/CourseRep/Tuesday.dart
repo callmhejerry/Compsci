@@ -24,7 +24,8 @@ class _TuesdayState extends State<Tuesday> {
       "Course": course,
       "Duration": duration,
       "Time": time,
-      "Venue": venue
+      "Venue": venue,
+      "timeStamp": DateTime.now()
     };
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection("Tuesday");
@@ -79,7 +80,7 @@ class _TuesdayState extends State<Tuesday> {
           }
           return Container();
         },
-        stream: tuesday.snapshots(),
+        stream: tuesday.orderBy("timeStamp").snapshots(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
